@@ -12,6 +12,8 @@ app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
 
+
+
 io.on('connection', function(socket){
 	console.log('a user connected');
 	socket.on('disconnect', function(){
@@ -20,14 +22,14 @@ io.on('connection', function(socket){
 	socket.on('chat message', function(msg){
 		io.emit('chat message', msg);
 	});
+	$('form').submit(function(){
+		socket.emit('chat message', $('#m').val());
+		$('#m').val('');
+		return false;
+	});
+	socket.on('chat message', function(msg){
+		$('#messages').append($('<li>').text(msg));
+	});
 });
 
-		var socket = io();
-		$('form').submit(function(){
-			socket.emit('chat message', $('#m').val());
-			$('#m').val('');
-			return false;
-		});
-		socket.on('chat message', function(msg){
-			$('#messages').append($('<li>').text(msg));
-		});
+
